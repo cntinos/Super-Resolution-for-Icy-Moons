@@ -1,68 +1,14 @@
 # Super-Resolution for Icy Moons
 
-
-
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://pss-gitlab.math.univ-paris-diderot.fr/ntinos/super-resolution-for-icy-moons.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-* [Set up project integrations](https://pss-gitlab.math.univ-paris-diderot.fr/ntinos/super-resolution-for-icy-moons/-/settings/integrations)
-
-## Collaborate with your team
-
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
 ## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+The icy moons of the outer solar system have been found in the forefront of planetary exploration, due to their diverse geomorphology coupled with numerous discoveries hinting to possible habitable conditions. Of paramount importance for constraining the internal structure and properties of these bodies are high-precision cartographic products, allowing for linking surface morphologies and composition to internal activity. These cartographic products are constructed by reconciling numerous different observations, which, due to the complexities of an orbital tour, are recorded under a great range of different illumination and observation conditions, with varying spatial sampling. The aim of this study is to provide a complete pipeline for producing Super-Resolution (SR) maps for icy moons, by combining all the overlapping observations for a specific target. The development and testing of our pipeline are carried out for Enceladus, using the hyperspectral cubes recorded by the Visual and Infrared Mapping Spectrometer (VIMS) instrument, on board the Cassini Saturn orbiter. We first navigate the data, calculating accurate projections that can be combined into global mosaics of Enceladus. We then implement a global photometric correction model that compensates for the different acquisition conditions. Finally, we combine all the overlapping observations to calculate the new SR maps of Enceladus in the infrared. The new SR global map of Enceladus provides new insight into the moon’s geomorphology as revealed from its surface spectral heterogeneity at finer spatial resolution, demonstrating the capability of SR to augment our current understanding of icy moons and help prepare for future observations.
 
 ## Badges
 On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## Pipeline
+
+![Pipeline flowchart](sr_pipeline_flowchart.svg)
 
 ## Installation
 Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
