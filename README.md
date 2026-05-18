@@ -9,7 +9,7 @@ In the following schematic the user can find the SR pipeline workflow as impleme
 ![Pipeline flowchart](sr_pipeline_flowchart.svg)
 
 ## Usage
-The SR pipeline has been tested on the Enceladus VIMS data set (but we strongly encourage broad implementation on varying instruments and targets). The names of the calibrated cubes used can be found in this repository in the Enceladus_cubes_ds4.txt file (Enceladus_cubes_flybys_ds4.txt contains the corresponding flyby names) and can be downloaded from the [Cassini VIMS Data Portal by Observatoire des Sciences de l'Univers Nantes Atlantique (Osuna)](https://vims.univ-nantes.fr/).
+The SR pipeline has been tested on the Enceladus VIMS data set (but we strongly encourage broad implementation on varying instruments and targets). The names of the calibrated cubes used can be found in this repository in the Enceladus_cubes_ds4.txt file (Enceladus_cubes_flybys_ds4.txt contains the corresponding flyby names) and can be downloaded from the [Cassini VIMS Data Portal by Observatoire des Sciences de l'Univers Nantes Atlantique (Osuna)](https://vims.univ-nantes.fr/). The list of the SPICE kernels used can be found in the following metakernels: cas_2004_v26.tm, cas_2005_v27.tm, cas_2006_v26.tm, cas_2007_v24.tm, cas_2008_v22.tm, cas_2009_v19.tm, cas_2011_v17.tm, cas_2012_v14.tm, cas_2013_v12.tm, cas_2014_v08.tm, cas_2015_v08.tm, cas_2016_v06.tm, cas_2017_v03.tm (most updated at the time of the development) and can be downloaded from the [Navigation and Ancillary Information Facility (NAIF)](https://naif.jpl.nasa.gov/naif/).
 
 ## Contributing
 We welcome any feedback or suggestions on the provided code. Please contact C. Ntinos at ntinos@ipgp.fr or christos.ntinos@community.isunet.edu.
