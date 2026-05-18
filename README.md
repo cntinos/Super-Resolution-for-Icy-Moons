@@ -1,3 +1,4 @@
+<style>body {text-align: justify}</style>
 # Super-Resolution for Icy Moons
 
 ## Description
