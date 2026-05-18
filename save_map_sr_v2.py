@@ -15,21 +15,39 @@ import numpy as np
 import pandas as pd
 from shapely.geometry import Polygon  # two different "Polygon" objects
 from matplotlib.patches import Polygon as Polygon_patch
-from matplotlib.collections import PatchCollection
-import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
-from matplotlib import cm
-from filter_map import filter_map_fun
 import os.path
-from constants import font_size
-import spiceypy as spice
-import auto_mk_selection
 from tqdm import tqdm
 from shapely.strtree import STRtree
 from pyproj import Geod
 
 
 def create_super_cells(minX, maxX, num_points_x, minY, maxY, num_points_y):
+    """
+    Parameters
+    ----------
+    minX : float
+        minimum value in the X-axis (longitude)
+    maxX : float
+        maximum value in the X-axis (longitude)
+    num_points_x : int
+        number of points in the grid in the X-axis (longitude)
+    minY : float
+        minimum value in the X-axis (latitude)
+    maxY : float
+        maximum value in the X-axis (latitude)
+    num_points_y : int
+        number of points in the grid in the X-axis (latitude)
+
+    Returns
+    -------
+    longitude_all_super : list of lists
+        longitude of corners for all super-cells
+    latitude_all_super: list of lists
+        latitude of corners for all super-cells
+
+    This function calculates regular rectangular grid of the super-cells.
+    """
     # create one-dimensional arrays for x and y
     x = np.linspace(minX, maxX, num_points_x)
     y = np.linspace(minY, maxY, num_points_y)
@@ -45,6 +63,23 @@ def create_super_cells(minX, maxX, num_points_x, minY, maxY, num_points_y):
 
 
 def load_map(file_name_input):
+    """
+    Parameters
+    ----------
+    file_name_input : str
+        name of photometrically corrected map to used as input for the SR calculation
+
+    Returns
+    -------
+    df : pandas.DataFrame
+        map of photometrically corrected reflectance factor at given wavelength
+    longitude_all : list of lists
+        longitude of corners for all pixels
+    latitude_all: list of lists
+        latitude of corners for all pixels
+
+    This function reads the photometrically corrected map to used as input for the SR calculation.
+    """
     # load data (deserialize)
     with open(file_name_input, 'rb') as handle:
         df, polygon_coordinates = pickle.load(handle)
@@ -55,6 +90,29 @@ def load_map(file_name_input):
 
 
 def calculate_overlapping_pixels(df, longitude_all, latitude_all, longitude_all_super, latitude_all_super, file_name):
+    """
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        map of photometrically corrected reflectance factor at given wavelength
+    longitude_all : list of lists
+        longitude of corners for all pixel
+    latitude_all: list of lists
+        latitude of corners for all pixel
+    longitude_all_super : list of lists
+        longitude of corners for all super-cells
+    latitude_all_super: list of lists
+        latitude of corners for all super-cells
+    file_name : str
+        name for the output binary file
+
+    Returns
+    ----------
+    polygon_contains_all : list of lists
+        indices of the df that are contained (partially or fully) in every super-cell
+
+    This function calculates the overlapping pixels (partially and fully) for every super-cell.
+    """
 
     # check if file with the overlapping pixels already exists, if True skip calculation (computationally expensive)
     if not os.path.exists('_data/polygon_contained_' + file_name + '.bin'):
@@ -92,7 +150,37 @@ def calculate_overlapping_pixels(df, longitude_all, latitude_all, longitude_all_
 
 def calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitude_all, polygon_contains_all,
                      longitude_all_super, latitude_all_super, weight_mode='2D'):
+    """
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        map of photometrically corrected reflectance factor at given wavelength
+    band_id : str
+        name of band e.g. "I/F_1.80401"
+    weight_power : int
+        exponent to be used in the SR weight calculation (n=1,2,3,...), suggested value n=2
+    file_name : str
+        name of the file used for the output binary
+    longitude_all : list of lists
+        longitude of corners for all pixel
+    latitude_all: list of lists
+        latitude of corners for all pixel
+    polygon_contains_all : list of lists
+        indices of the df that are contained (partially or fully) in every super-cell
+    longitude_all_super : list of lists
+        longitude of corners for all super-cells
+    latitude_all_super: list of lists
+        latitude of corners for all super-cells
+    weight_mode : str
+        selection between "2D" or "3D" for the calculation of the areas of the polygons, default value "2D"
 
+    Returns
+    ----------
+    df_sr : pandas.DataFrame
+        super-resolution map at given wavelength
+
+    This function calculates the super-resolution map at a given wavelength.
+    """
 
     # Use IAU mean radius = 252.1 km
     geod = Geod(a=256200, b=248600)  # metres
@@ -102,7 +190,7 @@ def calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitu
     index_sorted = df_sorted.index.values.tolist()
 
     # check if file with the super-resolution map already exists, if True skip calculation (computationally expensive)
-    if not os.path.exists('_data/' + file_name + f'_{weight_power}_{weight_mode}_new.bin'):
+    if not os.path.exists('_data/' + file_name + f'_{weight_power}_{weight_mode}.bin'):
         # calculate SR pixel value
         colormap_name = 'gray'
         cmap = matplotlib.colormaps[colormap_name]
@@ -132,16 +220,12 @@ def calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitu
                 pixel_points_all = [list(zip(longitude_all[j], latitude_all[j])) for j in index]
                 polygon_all = [Polygon(pixel_points) for pixel_points in pixel_points_all]
 
-                weight_all_list = []
-                for index in range(0, len(polygon_contains_all[i])):
-                    print(df.loc[polygon_contains_all[i][index]])
-                    polygon = polygon_all[index]
-                    weight_all_list.append((polygon.intersection(polygon_super).area / polygon.area) ** weight_power)
-                weight_all = np.array(weight_all_list)
-                #weight_all = np.array([(polygon.intersection(polygon_super).area / polygon.area) ** weight_power for polygon in polygon_all])
+                weight_all = np.array([(polygon.intersection(polygon_super).area / polygon.area) ** weight_power for polygon in polygon_all])
                 weight_sum = sum(weight_all)
                 super_value_wavg = sum(weight_all * df.loc[index][band_id+'_cor'])
-                super_value_sigma = sum((weight_all ** 2) * (df.loc[index][band_id + '_cor_sigma'] ** 2))
+                sigma_notnan = np.where(np.isnan(df.loc[index][band_id + '_cor_sigma']), 0, df.loc[index][band_id + '_cor_sigma'])
+                weight_notnan = np.where(sigma_notnan == 0, 0, weight_all)
+                super_value_sigma = sum((weight_notnan ** 2) * (sigma_notnan ** 2))
 
             elif weight_mode == '3D':
                 weight_sum = 0
@@ -174,7 +258,7 @@ def calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitu
 
             try:
                 super_value_num.append(super_value_wavg / weight_sum)
-                super_value_all_sigma.append(np.sqrt(super_value_sigma/(weight_sum**2)))
+                super_value_all_sigma.append(np.sqrt(super_value_sigma/(sum(weight_notnan)**2)))
 
             except:  # no pixels contained --> background pixel
                 super_value_all_avg.append([1, 1, 1, 1])  # white background pixels
@@ -208,36 +292,8 @@ def calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitu
     else:
         # read data (deserialize) for polygons contained in each SR pixel
         print('Super-resolution map pre-calculated.')
-        with open('_data/' + file_name + f'_{weight_power}.bin', 'rb') as handle:
+        with open('_data/' + file_name + f'_{weight_power}_{weight_mode}.bin', 'rb') as handle:
             df_sr, polygon_coordinates_sr = pickle.load(handle)
 
         return df_sr
-
-
-if __name__ == "__main__":
-    # define SR weight power
-    weight_power = 2
-
-    # create new polygon pixels
-    num_points_x = 1441  # num_cells+1
-    num_points_y = 721
-
-    # define the lower and upper limits for x and y
-    minX, maxX, minY, maxY = -180, 180, -90, 90  # global
-
-    longitude_all_super, latitude_all_super = create_super_cells(minX, maxX, num_points_x, minY, maxY, num_points_y)
-
-    # file name definition
-    band_id = 'I/F_1.80401'  # 'I/F_2.00167'  # 'I/F_1.65567'  #'I/F_3.09689'  # 'I/F_1.80401'
-    file_name = f'sr_global_map_ds4_wvln_{band_id.replace("I/F_","").replace(".","_")}_cor_0_0_0_5_DSK_unsaturated_with_bns_97_{num_points_x - 1}x{num_points_y - 1}'
-    file_name_input = f'_data/global_map_wvln_{band_id.replace("I/F_","").replace(".","_")}_cor_0_0_0_5_DSK_ds4_unsaturated_with_bns_97_projected.bin'
-
-    df, longitude_all, latitude_all = load_map(file_name_input)
-    #df = df[df['cube'] != '1487302144_1']  # remover HR reference
-
-    polygon_contains_all = calculate_overlapping_pixels(df, longitude_all, latitude_all, longitude_all_super,
-                                                        latitude_all_super, file_name)
-
-    df_sr = calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitude_all, polygon_contains_all,
-                             longitude_all_super, latitude_all_super)
 
