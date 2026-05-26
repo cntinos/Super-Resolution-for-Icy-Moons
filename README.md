@@ -15,10 +15,12 @@ The SR pipeline has been tested on the Enceladus VIMS data set (but we strongly 
 We welcome any feedback or suggestions on the provided code. Please contact C. Ntinos at ntinos@ipgp.fr or christos.ntinos@community.isunet.edu.
 
 ## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+Accompanying paper under review:
+
+Christos Ntinos, Sebastien Rodriguez, Nicolas Altobelli2, Stephane Le Mouelic, Rozenn Robidel, Benoit Seignovert, Gabriel Tobie, Thomas Cornet, and Claire Vallat, "Super-resolution maps of icy moons: Application to the Cassini-VIMS observations of Enceladus with updated navigation and photometric correction"
 
 ## License
-For open source projects, say how it is licensed.
+TBD
 
 ## Project status
 Project is under development.
