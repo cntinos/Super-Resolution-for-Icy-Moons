@@ -151,27 +151,6 @@ if __name__ == "__main__":
     df_cor = photometric_correction(df_0, polygon_coordinates, df_coef, band_id, df_sigma, output_name_cor,
                                     method='rf_cor', target_geom=[0, 0, 0])
 
-    fig, axs = plt.subplots(1, 1)
-    plot_map(df_cor, polygon_coordinates, axs, band_id+'_cor', 'gray',
-             f'cor I/F ({band_id.replace("I/F_", "").replace("_cor", "").replace("_sr", "")} '
-             + r'$\mu m$)', vmin=0, vmax=1)
-    axs.set_aspect('equal')
-    axs.set_xlim(-180, 180)
-    axs.set_ylim(-90, 90)
-    axs.set_xticks(range(-180, 181, 60),
-                   labels=[r'$180^{\circ}$W', r'$120^{\circ}$W', r'$60^{\circ}$W', r'$0^{\circ}$', r'60$^{\circ}$E',
-                           r'120$^{\circ}$E', r'180$^{\circ}$E'], fontsize=font_size, ha='left')
-    axs.set_yticks(range(-90, 91, 30),
-                   labels=[r'90$^{\circ}$S', r'60$^{\circ}$S', r'30$^{\circ}$S', r'0$^{\circ}$', r'30$^{\circ}$N',
-                           r'60$^{\circ}$N', r'90$^{\circ}$N'], fontsize=font_size, va='center')
-
-    fig.suptitle(
-        f'Enceladus at {band_id.replace("I/F_", "").replace("_sr", "")} μm corrected, 5 points/edge, DSK, data-set 4: 1566 cubes' + '\n' +
-        r'target pixels, i, e $\leq$ 80$^{\circ}$, 0.001 $\leq$ I/F $\leq$ 1, sampling $\leq$ 78 km/pixel (156281 pixels)' +
-        '\n saturation limit = (2**12-1-bns)*0.97, general correction')
-
-    plt.show()
-
     # STEP 8: Save projected map #######################################################################################
 
     file_name = 'global_map_wvln_3_09689_cor_0_0_0_5_DSK_ds4_unsaturated_with_bns_97'
