@@ -15,8 +15,15 @@ import numpy as np
 import pandas as pd
 from shapely.geometry import Polygon  # two different "Polygon" objects
 from matplotlib.patches import Polygon as Polygon_patch
+from matplotlib.collections import PatchCollection
+import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
+from matplotlib import cm
+from filter_map import filter_map_fun
 import os.path
+from constants import font_size
+import spiceypy as spice
+import auto_mk_selection
 from tqdm import tqdm
 from shapely.strtree import STRtree
 from pyproj import Geod
@@ -197,6 +204,19 @@ def calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitu
         norm = Normalize(vmin=0.5, vmax=0.85)  # Normalize(vmin=np.min(polygons_all_value), vmax=np.max(polygons_all_value))
         plot_variable = band_id + '_cor'
 
+        # pre-calculate pixel polygons and areas (outside the super-cell loop)
+        pixel_polys = {}
+        pixel_areas = {}
+        for idx in tqdm(df.index, desc="pixel polygons and areas"):
+            p = Polygon(list(zip(longitude_all[idx], latitude_all[idx])))
+            pixel_polys[idx] = p
+            pixel_areas[idx] = p.area
+
+        # df columns into numpy arrays for fast indexing
+        vals_arr = df[band_id + '_cor'].to_numpy()
+        sigma_arr = df[band_id + '_cor_sigma'].to_numpy()
+        index_map = {idx: pos for pos, idx in enumerate(df.index)}  # map pandas df to numpy array indices
+
         # calculate new pixel value
         super_value_all = []
         polygon_super_all = []
@@ -217,13 +237,19 @@ def calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitu
 
             if weight_mode == '2D':
                 index = polygon_contains_all[i]
-                pixel_points_all = [list(zip(longitude_all[j], latitude_all[j])) for j in index]
-                polygon_all = [Polygon(pixel_points) for pixel_points in pixel_points_all]
-
-                weight_all = np.array([(polygon.intersection(polygon_super).area / polygon.area) ** weight_power for polygon in polygon_all])
+                polygon_all = [pixel_polys[j] for j in index]
+                areas = np.array([pixel_areas[j] for j in index])
+                inter_areas = np.array([p.intersection(polygon_super).area for p in polygon_all])
+                weight_all = (inter_areas / areas) ** weight_power
                 weight_sum = sum(weight_all)
-                super_value_wavg = sum(weight_all * df.loc[index][band_id+'_cor'])
-                sigma_notnan = np.where(np.isnan(df.loc[index][band_id + '_cor_sigma']), 0, df.loc[index][band_id + '_cor_sigma'])
+
+                # convert original labels to positions in the numpy arrays
+                positions = [index_map[j] for j in index]
+                # pull values directly from the pre-extracted numpy arrays
+                v = vals_arr[positions]
+                s = sigma_arr[positions]
+                super_value_wavg = sum(weight_all * v)
+                sigma_notnan = np.where(np.isnan(s), 0, s)
                 weight_notnan = np.where(sigma_notnan == 0, 0, weight_all)
                 super_value_sigma = sum((weight_notnan ** 2) * (sigma_notnan ** 2))
 
@@ -253,7 +279,7 @@ def calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitu
                     weight = (np.abs(area_inter) / np.abs(area_pixel)) ** weight_power  # test different powers
 
                     weight_sum += weight
-                    super_value_wavg += weight * df.loc[index][band_id + '_cor']
+                    super_value_wavg += weight * df.loc[index][band_id + '_cor']  # change this too for numpy arrays
                     super_value_sigma += (weight * df.loc[index][band_id + '_cor_sigma'])**2
 
             try:
@@ -296,4 +322,32 @@ def calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitu
             df_sr, polygon_coordinates_sr = pickle.load(handle)
 
         return df_sr
+
+
+if __name__ == "__main__":
+    # define SR weight power
+    weight_power = 2
+
+    # create new polygon pixels
+    num_points_x = 1441  # num_cells+1
+    num_points_y = 721
+
+    # define the lower and upper limits for x and y
+    minX, maxX, minY, maxY = -180, 180, -90, 90  # global
+
+    longitude_all_super, latitude_all_super = create_super_cells(minX, maxX, num_points_x, minY, maxY, num_points_y)
+
+    # file name definition
+    band_id = 'I/F_1.80401'  # 'I/F_2.00167'  # 'I/F_1.65567'  #'I/F_3.09689'  # 'I/F_1.80401'
+    file_name = f'sr_global_map_ds4_wvln_{band_id.replace("I/F_","").replace(".","_")}_cor_0_0_0_5_DSK_unsaturated_with_bns_97_{num_points_x - 1}x{num_points_y - 1}'
+    file_name_input = f'_data/global_map_wvln_{band_id.replace("I/F_","").replace(".","_")}_cor_0_0_0_5_DSK_ds4_unsaturated_with_bns_97_projected.bin'
+
+    df, longitude_all, latitude_all = load_map(file_name_input)
+    #df = df[df['cube'] != '1487302144_1']  # remover HR reference
+
+    polygon_contains_all = calculate_overlapping_pixels(df, longitude_all, latitude_all, longitude_all_super,
+                                                        latitude_all_super, file_name)
+
+    df_sr = calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitude_all, polygon_contains_all,
+                             longitude_all_super, latitude_all_super)
 
