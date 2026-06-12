@@ -13,6 +13,7 @@ import pickle
 import matplotlib
 import numpy as np
 import pandas as pd
+import shapely
 from shapely.geometry import Polygon  # two different "Polygon" objects
 from matplotlib.patches import Polygon as Polygon_patch
 from matplotlib.collections import PatchCollection
@@ -236,22 +237,28 @@ def calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitu
             sampling_all.append(df_sorted[df_sorted.index.isin(index_contained)].tail(1)['sampling'].values)
 
             if weight_mode == '2D':
+
                 index = polygon_contains_all[i]
-                polygon_all = [pixel_polys[j] for j in index]
                 areas = np.array([pixel_areas[j] for j in index])
-                inter_areas = np.array([p.intersection(polygon_super).area for p in polygon_all])
+                polygon_all = np.array([pixel_polys[j] for j in index])
+                polygon_inter_all = shapely.intersection(polygon_all, polygon_super)
+                inter_areas = shapely.area([polygon_inter_all])
+
+                # calculate weights
                 weight_all = (inter_areas / areas) ** weight_power
-                weight_sum = sum(weight_all)
+                weight_sum = np.sum(weight_all)
 
                 # convert original labels to positions in the numpy arrays
                 positions = [index_map[j] for j in index]
+
                 # pull values directly from the pre-extracted numpy arrays
                 v = vals_arr[positions]
                 s = sigma_arr[positions]
-                super_value_wavg = sum(weight_all * v)
+
+                super_value_wavg = np.sum(weight_all * v)
                 sigma_notnan = np.where(np.isnan(s), 0, s)
                 weight_notnan = np.where(sigma_notnan == 0, 0, weight_all)
-                super_value_sigma = sum((weight_notnan ** 2) * (sigma_notnan ** 2))
+                super_value_sigma = np.sum((weight_notnan ** 2) * (sigma_notnan ** 2))
 
             elif weight_mode == '3D':
                 weight_sum = 0
@@ -284,7 +291,7 @@ def calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitu
 
             try:
                 super_value_num.append(super_value_wavg / weight_sum)
-                super_value_all_sigma.append(np.sqrt(super_value_sigma/(sum(weight_notnan)**2)))
+                super_value_all_sigma.append(np.sqrt(super_value_sigma/(np.sum(weight_notnan)**2)))
 
             except:  # no pixels contained --> background pixel
                 super_value_all_avg.append([1, 1, 1, 1])  # white background pixels
