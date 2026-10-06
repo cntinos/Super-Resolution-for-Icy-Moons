@@ -32,7 +32,7 @@ def save_map(cube_name_all, cube_flybys, num_points, method, method_sampling, ro
     method_sampling: str
         "DISTANCE" or "DIAGONAL" for calculating pixel sampling
     root_path: str
-        path in repository to save cubes
+        path in repository for saved calibrated cubes
     output_name: str
         name for binary output file
 
@@ -99,7 +99,7 @@ def save_map(cube_name_all, cube_flybys, num_points, method, method_sampling, ro
     nav_cube_all_19 = nav_cube[19]
 
     # read spectral info from cubes with planetaryimage module
-    isisimage = CubeFile.open('_Enceladus_cubes/C' + cube_name + '_ir.cub')
+    isisimage = CubeFile.open(root_path + '/C' + cube_name + '_ir.cub')
     cube_spectra = isisimage.data
 
     # create navigation cube dataframe to be pickled
@@ -138,7 +138,6 @@ def save_map(cube_name_all, cube_flybys, num_points, method, method_sampling, ro
         cube_name = cube_name_all[counter]
 
         # load info from cube header
-        root_path = '_Enceladus_cubes'  # for .cub files downloaded from VIMS data portal
         r_size, c_size, target_cube, ntvtim_start, ntvtim_stop, mirtim, \
         R_offset, C_offset, modeid_IR, inttim = read_cube_header.main(cube_name, root_path)
 
@@ -182,7 +181,7 @@ def save_map(cube_name_all, cube_flybys, num_points, method, method_sampling, ro
         nav_cube_all_19 = nav_cube[19]
 
         # read spectral info from cubes with planetaryimage module
-        isisimage = CubeFile.open('_Enceladus_cubes/C' + cube_name + '_ir.cub')
+        isisimage = CubeFile.open(root_path + '/C' + cube_name + '_ir.cub')
         cube_spectra = isisimage.data
 
         # create navigation cube dataframe to be pickled
