@@ -69,7 +69,7 @@ def radiometric_error_vims(df_bns, df_raw, cube_name_all, output_name_sigma):
     df_mean_bns = pd.DataFrame({'cube': cube_name_all})
     df_mean_bns[columns] = bns_mean_array
 
-    # caclulate radiometric noise of VIMS
+    # calculate radiometric noise of VIMS
     gain = 300  # VIMS gain in DN^-1
     read_noise = 1  # in DN
 
