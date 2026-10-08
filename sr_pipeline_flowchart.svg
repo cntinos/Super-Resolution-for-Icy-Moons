@@ -36,13 +36,16 @@
 <text x="340" y="302" text-anchor="middle" dominant-baseline="central" font-size="13.5" font-weight="600" fill="#0d3c6e">save_map</text>
 <line x1="340" y1="330" x2="340" y2="338" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
 
-<!-- Step 3 (NEW): save_cube_values_bns + save_map_raw + radiometric_error_vims -->
+<!-- Step 3: save_cube_values_bns + save_map_raw (both call read_qub, shared box on the right) + radiometric_error_vims -->
 <text x="158" y="391" text-anchor="end" font-size="11" fill="#888">step 3</text>
 <rect x="190" y="340" width="300" height="102" rx="8" fill="#deeaf7" stroke="#1f77b4" stroke-width="0.5"/>
 <rect x="204" y="352" width="272" height="22" rx="4" fill="white" stroke="#1f77b4" stroke-width="0.5" stroke-dasharray="3 2"/>
 <text x="340" y="363" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#0d3c6e">save_cube_values_bns</text>
 <rect x="204" y="382" width="272" height="22" rx="4" fill="white" stroke="#1f77b4" stroke-width="0.5" stroke-dasharray="3 2"/>
 <text x="340" y="393" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#0d3c6e">save_map_raw</text>
+<!-- read_qub: called by both save_cube_values_bns and save_map_raw -->
+<rect x="419" y="355" width="54" height="46" rx="3" fill="#edf4fb" stroke="#1f77b4" stroke-width="0.5" stroke-dasharray="2 2"/>
+<text x="446" y="378" text-anchor="middle" dominant-baseline="central" font-size="9.5" fill="#1f77b4">read_qub</text>
 <rect x="204" y="412" width="272" height="22" rx="4" fill="white" stroke="#1f77b4" stroke-width="0.5" stroke-dasharray="3 2"/>
 <text x="340" y="423" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#0d3c6e">radiometric_error_vims</text>
 <line x1="340" y1="444" x2="340" y2="456" stroke="#555" stroke-width="1.5" marker-end="url(#a)"/>
