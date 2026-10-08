@@ -73,7 +73,7 @@ def read_qub(path):
         array of raw data (DN) for all bands (VIS + IR)
     bkg: np.array
         array of background noise (DN) for each line and for all bands (VIS + IR)
-    header: str
+    label: str
         raw cube header
 
     This function opens a VIMS raw cube (.qub) and outputs the data in DN (spectral cube and background noise).
@@ -88,20 +88,28 @@ def read_qub(path):
     start = (int(re.search(r'\^QUBE\s*=\s*(\d+)', label).group(1)) - 1)*rb
     ns, nb, nl = [int(x) for x in keyword(label, 'CORE_ITEMS').strip('()').split(',')]
     ss, bs, _ = [int(x) for x in keyword(label, 'SUFFIX_ITEMS').strip('()').split(',')]
-    dtype_core = f">i{int(keyword(label, 'CORE_ITEM_BYTES'))}"
-    dtype_suffix = f">i{int(keyword(label, 'SUFFIX_BYTES'))}"
+    bin_core = int(keyword(label, 'CORE_ITEM_BYTES'))
+    bin_suffix = int(keyword(label, 'SUFFIX_BYTES'))
+    dtype_core = f">i{bin_core}"
+    dtype_suffix = f">i{bin_suffix}"
 
     core = np.zeros((nb, nl, ns))
-    bkg = np.zeros((nb, nl))
+    bkg = np.zeros((nb, nl, ns))
     p = start
 
     for l in range(nl):
         for b in range(nb):
             core[b, l] = np.frombuffer(raw, dtype_core, ns, p)
-            p += 2*ns
-            bkg[b, l] = np.frombuffer(raw, dtype_suffix, ss, p)[0]
-            p += 4*ss
+            p += bin_core*ns
+            bkg[b, l] = [np.frombuffer(raw, dtype_suffix, ss, p)[0]]*ns  # expand same bkg for all samples in a line
+            p += bin_suffix*ss
         p += bs*(ns + ss)*4  # band-suffix planes (housekeeping)
 
-    return core.astype(float), bkg.astype(float)
+    return core.astype(float), bkg.astype(float), label
 
+
+if __name__ == '__main__':
+    core, suffix, label = read_qub('_Enceladus_cubes_raw/v1487297065_1.qub')
+    print(core.shape)
+    print(suffix.shape)
+    print([float(x) for x in keyword(label, "EXPOSURE_DURATION").strip('()').split(',')])
