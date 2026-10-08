@@ -33,6 +33,7 @@ if __name__ == "__main__":
     # STEP 1: Calculate navigation cubes ###############################################################################
 
     root_path = '_Enceladus_cubes'  # for .cub files downloaded from VIMS data portal
+    root_path_raw = '_Enceladus_cubes_raw'  # for .qub files
     num_points = 5  # number of points per polygon-pixel edge
     target = 'ENCELADUS'  # impose target name because some cubes are targeted at SATURN
     method = 'DSK/UNPRIORITIZED'  # 'ELLIPSOID'  # 'DSK/UNPRIORITIZED'
@@ -72,12 +73,12 @@ if __name__ == "__main__":
     # STEP 3: VIMS error calculation ###################################################################################
     # define output file name for background noise (bns) extracted from cubes backplanes
     output_name_bns = output_name_bands + "_bns"
-    df_bns = save_cube_values_bns(cube_name_all, output_name_bns, root_path)
+    df_bns = save_cube_values_bns(cube_name_all, output_name_bns, root_path_raw)
 
     # define output file name for raw values (in DN) extracted from .qub files using IDL routine
     output_name_raw = output_name_bands + "_raw"
     # check if map is precalculated
-    df_raw = save_map_raw(cube_name_all, output_name_raw, root_path)
+    df_raw = save_map_raw(cube_name_all, output_name_raw, root_path_raw)
 
     # define output file name for calculated sigma values (use of external files)
     output_name_sigma = output_name_bands + "_sigma"
