@@ -7,8 +7,10 @@ CUB_NAME: is the name of the .CUB file which we want to retrieve the header info
 AUTHOR: Christos Ntinos (IPGP, November 2021)
 
 VERSION: 1.0
-
 """
+
+from constants import BBLS_timecorrection
+
 
 def main(cube_name, root_path):
     """
@@ -47,9 +49,6 @@ def main(cube_name, root_path):
     """
 
     file_name = root_path + "/C" + cube_name + "_ir.cub"
-
-    # set the time correction for the instrument's clock
-    BBLS_timecorrection = 1.01725
 
     # read cube header up to '  Group = Archive'
     header = []
