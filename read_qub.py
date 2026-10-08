@@ -107,9 +107,3 @@ def read_qub(path):
 
     return core.astype(float), bkg.astype(float), label
 
-
-if __name__ == '__main__':
-    core, suffix, label = read_qub('_Enceladus_cubes_raw/v1487297065_1.qub')
-    print(core.shape)
-    print(suffix.shape)
-    print([float(x) for x in keyword(label, "EXPOSURE_DURATION").strip('()').split(',')])
