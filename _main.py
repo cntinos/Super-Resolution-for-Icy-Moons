@@ -105,11 +105,9 @@ if __name__ == "__main__":
         df_bns = pickle.load(handle)
 
     output_name_wvln = 'global_map_all_wvlns_5_DSK_ds4'
-    output_name_wvln_df = 'df_all_wvlns_[]_ds4'
 
     df_wvln_all, df_sigma, df_raw, df_bns_new = wvln_shift_correction(cube_name_all, root_path, df, polygon_coordinates,
-                                                                      df_sigma, df_raw, df_bns, output_name_wvln,
-                                                                      output_name_wvln_df)
+                                                                      df_sigma, df_raw, df_bns, output_name_wvln)
     
     # STEP 5: Remove saturation ########################################################################################
     with open('_data/global_map_all_wvlns_5_DSK_ds4.bin', 'rb') as handle:

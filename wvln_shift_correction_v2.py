@@ -18,8 +18,7 @@ import numpy as np
 from tqdm import tqdm
 
 
-def wvln_shift_correction(cube_name_all, root_path, df, polygon_coordinates, df_sigma, df_raw, df_bns, output_name_wvln,
-                          output_name_wvln_df):
+def wvln_shift_correction(cube_name_all, root_path, df, polygon_coordinates, df_sigma, df_raw, df_bns, output_name_wvln):
     """
     Parameters
     ----------
@@ -39,8 +38,6 @@ def wvln_shift_correction(cube_name_all, root_path, df, polygon_coordinates, df_
         map of background noise (bns) for all wavelengths
     output_name_wvln: str
         name for binary output file (map)
-    output_name_wvln_df: str
-        name for binary output file (df)
 
     Returns
     -------
@@ -199,11 +196,11 @@ def wvln_shift_correction(cube_name_all, root_path, df, polygon_coordinates, df_
         pickle.dump([df_wvln_all, polygon_coordinates], handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     # store map data (serialize) for sigma values
-    with open(f'_data/{output_name_wvln_df.replace("[]", "sigma")}.bin', 'wb') as handle:
+    with open(f'_data/{output_name_wvln}_sigma.bin', 'wb') as handle:
         pickle.dump(df_sigma, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     # store map data (serialize) for raw values
-    with open(f'_data/{output_name_wvln_df.replace("[]", "raw")}.bin', 'wb') as handle:
+    with open(f'_data/{output_name_wvln}_raw.bin', 'wb') as handle:
         pickle.dump(df_raw, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     # wavelength shift for background noise (needed for saturation filtering)
@@ -226,7 +223,7 @@ def wvln_shift_correction(cube_name_all, root_path, df, polygon_coordinates, df_
     df_bns_new[[f'I/F_{standard_wvln_0}_bns' for standard_wvln_0 in standard_wvln_2]] = spectrum_wvln_bns
 
     # store map data (serialize)
-    with open(f'_data/{output_name_wvln_df.replace("[]", "bns")}_bns.bin', 'wb') as handle:
+    with open(f'_data/{output_name_wvln}_bns.bin', 'wb') as handle:
         pickle.dump(df_bns_new, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     return df_wvln_all, df_sigma, df_raw, df_bns_new
