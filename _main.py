@@ -31,6 +31,7 @@ simplefilter(action="ignore", category=pd.errors.PerformanceWarning)  # supress 
 if __name__ == "__main__":
 
     # STEP 1: Calculate navigation cubes ###############################################################################
+    print('###### STEP 1 ######')
 
     root_path = '_Enceladus_cubes'  # for .cub files downloaded from VIMS data portal
     root_path_raw = '_Enceladus_cubes_raw'  # for .qub files
@@ -49,7 +50,7 @@ if __name__ == "__main__":
     print(exit_message)
 
     # STEP 2: Calculate map for all bands ##############################################################################
-
+    print('###### STEP 2 ######')
     # read cube names from text file
     f = open("Enceladus_cubes_ds4.txt", "r")
     cube_name_all = [x.replace("\n", "") for x in f.readlines()]
@@ -71,6 +72,7 @@ if __name__ == "__main__":
                                        output_name_bands)
 
     # STEP 3: VIMS error calculation ###################################################################################
+    print('###### STEP 3 ######')
     # define output file name for background noise (bns) extracted from cubes backplanes
     output_name_bns = output_name_bands + "_bns"
     df_bns = save_cube_values_bns(cube_name_all, output_name_bns, root_path_raw)
@@ -85,6 +87,7 @@ if __name__ == "__main__":
     df_sigma = radiometric_error_vims(df_bns, df_raw, cube_name_all, output_name_sigma)
 
     # STEP 4: Wavelength shift #########################################################################################
+    print('###### STEP 4 ######')
     # read cube names from text file
     f = open("Enceladus_cubes_ds4.txt", "r")
     cube_name_all = [x.replace("\n", "") for x in f.readlines()]
@@ -110,6 +113,7 @@ if __name__ == "__main__":
                                                                       df_sigma, df_raw, df_bns, output_name_wvln)
     
     # STEP 5: Remove saturation ########################################################################################
+    print('###### STEP 5 ######')
     with open('_data/global_map_all_wvlns_5_DSK_ds4.bin', 'rb') as handle:
         df, polygon_coordinates = pickle.load(handle)
 
@@ -125,6 +129,7 @@ if __name__ == "__main__":
     df_unsat = save_map_unsaturated(df, polygon_coordinates, df_raw, df_bns, margin, output_name_unsat)
     
     # STEP 6: Photometric correction coefficients ######################################################################
+    print('###### STEP 6 ######')
     # calculate coefficients a1, a0 of the linear fit of Aeq-g and their accompanying errors
     with open('_data/global_map_all_wvlns_5_DSK_ds4_unsaturated_with_bns_97.bin', 'rb') as handle:
         df_0, polygon_coordinates = pickle.load(handle)
@@ -133,6 +138,7 @@ if __name__ == "__main__":
     df_coef = photometric_correction_coef(df_0, output_name_coef)
 
     # STEP 7: Photometric correction of map ############################################################################
+    print('###### STEP 7 ######')
     # define band (standard wavelength) at which to calculate the map
     band_id = 'I/F_3.09689'
 
@@ -151,13 +157,13 @@ if __name__ == "__main__":
                                     method='rf_cor', target_geom=[0, 0, 0])
 
     # STEP 8: Save projected map #######################################################################################
-
+    print('###### STEP 8 ######')
     file_name = 'global_map_wvln_3_09689_cor_0_0_0_5_DSK_ds4_unsaturated_with_bns_97'
 
     df_proj, polygon_coordinates_proj = save_map_projected(file_name)
 
     # STEP 9: Calculate SR map #########################################################################################
-
+    print('###### STEP 9 ######')
     # define SR weight power (n=1, 2, 3,...)
     weight_power = 2
 
