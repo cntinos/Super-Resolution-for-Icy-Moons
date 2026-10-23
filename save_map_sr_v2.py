@@ -193,10 +193,6 @@ def calculate_sr_map(df, band_id, weight_power, file_name, longitude_all, latitu
     # Use IAU mean radius = 252.1 km
     geod = Geod(a=256200, b=248600)  # metres
 
-    # short pixels by sampling
-    df_sorted = df.sort_values(by='sampling', ascending=False)
-    index_sorted = df_sorted.index.values.tolist()
-
     # check if file with the super-resolution map already exists, if True skip calculation (computationally expensive)
     if not os.path.exists('_data/' + file_name + f'_{weight_power}_{weight_mode}.bin'):
         # calculate SR pixel value
