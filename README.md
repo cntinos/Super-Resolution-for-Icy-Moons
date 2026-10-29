@@ -1,7 +1,32 @@
 # pySRIMP: Super-Resolution for Icy Moons and Planetary bodies
 
 ## Description
-The icy moons of the outer solar system have been found in the forefront of planetary exploration, due to their diverse geomorphology coupled with numerous discoveries hinting to possible habitable conditions. Of paramount importance for constraining the internal structure and properties of these bodies are high-precision cartographic products, allowing for linking surface morphologies and composition to internal activity. These cartographic products are constructed by reconciling numerous different observations, which, due to the complexities of an orbital tour, are recorded under a great range of different illumination and observation conditions, with varying spatial sampling. The aim of this study is to provide a complete pipeline for producing Super-Resolution (SR) maps for icy moons, by combining all the overlapping observations for a specific target. The development and testing of our pipeline are carried out for Enceladus, using the hyperspectral cubes recorded by the Visual and Infrared Mapping Spectrometer (VIMS) instrument, on board the Cassini Saturn orbiter. We first navigate the data, calculating accurate projections that can be combined into global mosaics of Enceladus. We then implement a global photometric correction model that compensates for the different acquisition conditions. Finally, we combine all the overlapping observations to calculate the new SR maps of Enceladus in the infrared. The new SR global map of Enceladus provides new insight into the moon’s geomorphology as revealed from its surface spectral heterogeneity at finer spatial resolution, demonstrating the capability of SR to augment our current understanding of icy moons and help prepare for future observations.
+pySRIMP is a Python pipeline for building super-resolution (SR) maps of planetary
+surfaces from overlapping hyperspectral observations. It takes a set of calibrated
+image cubes acquired under different viewing and illumination conditions and
+combines them into a single map at finer spatial sampling than the individual
+observations.
+
+The pipeline runs in three stages:
+
+1. **Navigation** – computes accurate projections for every cube from the
+   spacecraft geometry (SPICE kernels), so that observations can be co-registered
+   into global mosaics.
+2. **Photometric correction** – fits and applies a global photometric model that
+   compensates for the varying incidence, emission and phase angles across
+   acquisitions.
+3. **Super-resolution** – merges all overlapping, corrected observations of a
+   target into the final SR map.
+
+pySRIMP was developed and validated on the Cassini VIMS observations of Enceladus,
+where it yields the first global infrared map of the moon at enhanced resolution
+(Ntinos et al., 2026). The methodology is not specific to that data set: with
+appropriate kernels and calibrated cubes it can be applied to other icy moons and
+instruments, including future hyperspectral data from missions such as JUICE.
+
+Mapping products at this level of detail matter because they link surface
+morphology and composition to internal activity, which is central to constraining
+the structure and potential habitability of the outer solar system's icy moons.
 
 ## Pipeline
 In the following schematic the user can find the SR pipeline workflow as implemented in the _main.py module. The pipeline consists of three blocks corresponding to the three main steps of the methodology: Navigation, Photometric Correction and Super-Resolution. An additional block to the right, lists auxiliary modules used for constants, filtering of the data and visualisation.
