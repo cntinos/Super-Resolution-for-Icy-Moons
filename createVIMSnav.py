@@ -313,7 +313,7 @@ def main(cube_name, num_points, target, root_path, method, method_sampling):
                     CoverageTool_RectangularPIXEL.main(et, target, instnm, obsrvr, num_points, abcorr, dvec_all, method)
 
                 if num_corners != 0:  # agreement between nav_cub.T[i][1:5] and flag1
-                    nav_cube[5][i] == num_corners  # Layer 6: number of corners of projected pixel
+                    nav_cube[5][i] = num_corners  # Layer 6: number of corners of projected pixel
                     for j in range(0, num_corners):
                         radius, pclon, pclat = spice.spiceypy.reclat(area_corners[j])
                         nav_cube[7 + j][i] = np.rad2deg(pclon)  # Layer 8-15: longitude corners up to 8 [deg]
