@@ -36,6 +36,10 @@ In the following schematic the user can find the SR pipeline workflow as impleme
 ## Usage
 The SR pipeline has been tested on the Enceladus VIMS data set (but we strongly encourage broad implementation on varying instruments and targets). The names of the calibrated cubes used can be found in this repository in the Enceladus_cubes_ds4.txt file (Enceladus_cubes_flybys_ds4.txt contains the corresponding flyby names) and can be downloaded from the [Cassini VIMS Data Portal by Observatoire des Sciences de l'Univers Nantes Atlantique (Osuna)](https://vims.univ-nantes.fr/). The list of the SPICE kernels used can be found in the following metakernels: cas_2004_v26.tm, cas_2005_v27.tm, cas_2006_v26.tm, cas_2007_v24.tm, cas_2008_v22.tm, cas_2009_v19.tm, cas_2011_v17.tm, cas_2012_v14.tm, cas_2013_v12.tm, cas_2014_v08.tm, cas_2015_v08.tm, cas_2016_v06.tm, cas_2017_v03.tm (most updated at the time of the development) and can be downloaded from the [Navigation and Ancillary Information Facility (NAIF)](https://naif.jpl.nasa.gov/naif/).
 
+## Examples
+
+Example cartographic products for Enceladus (monochromatic at 1.80401 um and RGB composite) can be found in [Ntinos, C., & Rodriguez, S. (2026). Super-Resolution Maps of Icy Moons: Cassini VIMS Mosaics of Enceladus (Version 1.0.0) [Data set]. Zenodo.](https://doi.org/10.5281/zenodo.23669861)
+
 ## Contributing
 Development takes place on the IPGP GitLab at <https://pss-gitlab.math.univ-paris-diderot.fr/ntinos/super-resolution-for-icy-moons>.
 The GitHub repository at <https://github.com/cntinos/Super-Resolution-for-Icy-Moons> is an automatically updated mirror.
@@ -45,10 +49,14 @@ In case the institutional GitLab requires an approved account, please report bug
 For other enquiries contact C. Ntinos at ntinos@ipgp.fr or christos.ntinos@community.isunet.edu.
 
 ## Authors and acknowledgment
-Accompanying paper:
 
+#Accompanying paper
 [Christos Ntinos](https://orcid.org/0000-0003-4709-3665), [Sebastien Rodriguez](https://orcid.org/0000-0003-1219-0641), [Stephane Le Mouelic](https://orcid.org/0000-0001-5260-1367), [Rozenn Robidel](https://orcid.org/0000-0002-5544-8940), [Benoit Seignovert](https://orcid.org/0000-0001-6533-275X), [Thomas Cornet](https://orcid.org/0000-0001-5971-0056), [Nicolas Altobelli](https://orcid.org/0000-0003-4244-6302), [Gabriel Tobie](https://orcid.org/0000-0002-4494-0294), and [Claire Vallat](https://orcid.org/0000-0001-6921-868X) (2026). Super-resolution maps of icy moons: Application to the Cassini-VIMS observations of Enceladus with updated navigation and photometric correction. *Planetary Research*, **1**(2), 349.
 [https://doi.org/10.53480/arz2-gn59](https://doi.org/10.53480/arz2-gn59)
+
+#Zenodo code repository
+[Ntinos, C., & Rodriguez, S. (2026). Super-Resolution for Icy Moons (Version 1.0.0) [Computer software]. Zenodo.](https://doi.org/10.5281/zenodo.21037588)
+
 
 ## License
 TBD
