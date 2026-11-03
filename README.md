@@ -50,11 +50,11 @@ For other enquiries contact C. Ntinos at ntinos@ipgp.fr or christos.ntinos@commu
 
 ## Authors and acknowledgment
 
-#Accompanying paper
+###Accompanying paper
 [Christos Ntinos](https://orcid.org/0000-0003-4709-3665), [Sebastien Rodriguez](https://orcid.org/0000-0003-1219-0641), [Stephane Le Mouelic](https://orcid.org/0000-0001-5260-1367), [Rozenn Robidel](https://orcid.org/0000-0002-5544-8940), [Benoit Seignovert](https://orcid.org/0000-0001-6533-275X), [Thomas Cornet](https://orcid.org/0000-0001-5971-0056), [Nicolas Altobelli](https://orcid.org/0000-0003-4244-6302), [Gabriel Tobie](https://orcid.org/0000-0002-4494-0294), and [Claire Vallat](https://orcid.org/0000-0001-6921-868X) (2026). Super-resolution maps of icy moons: Application to the Cassini-VIMS observations of Enceladus with updated navigation and photometric correction. *Planetary Research*, **1**(2), 349.
 [https://doi.org/10.53480/arz2-gn59](https://doi.org/10.53480/arz2-gn59)
 
-#Zenodo code repository
+###Zenodo code repository
 [Ntinos, C., & Rodriguez, S. (2026). Super-Resolution for Icy Moons (Version 1.0.0) [Computer software]. Zenodo.](https://doi.org/10.5281/zenodo.21037588)
 
 
