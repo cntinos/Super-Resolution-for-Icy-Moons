@@ -1,12 +1,19 @@
 """
-Created on JuLy, 2023
+Created on July 2023
 
-@author: Christos Ntinos
+@author: Christos Ntinos (IPGP)
 
 This module contains the constant values and generic funcitons to be called by other modules.
 
 Version: 1.0
 """
+
+# radiometric constants
+c = 2.998 * 10 ** 8  # speed of light in m/s
+h = 6.626 * 10 ** (-34)  # Planck's constant in Js
+alpha = 0.035  # IR telescope aperture in m^2 !!! different from report
+omega = 2.5 * 10 ** (-7)  # FOV solid angle subtended in srad
+distance = 9.5475  # mean Sun - Saturn distance in au
 
 # set the time correction for the instrument's clock
 BBLS_timecorrection = 1.01725

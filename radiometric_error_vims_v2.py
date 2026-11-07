@@ -1,7 +1,7 @@
-'''
-Created on October, 2023
+"""
+Created on October 2023
 
-@author: Christos Ntinos
+@author: Christos Ntinos (IPGP)
 
 This Module calculates the standard deviation of the radiance factor I/F for the original (uncorrected) dataset based on
 the analysis of [Es-sayeh et al., 2023].
@@ -11,17 +11,15 @@ Version: 2.0 (January 2026)
 Adapted from Mael Es-sayer (IPGP/UPC, 2022) in IDL
 Adapted from Thomas Cornet in IDL
 Adapted from Sebastien Rodriguez in IDL
-
-'''
+"""
 
 import pickle
 from statistics import mean, pstdev
 import numpy as np
 from scipy.interpolate import interp1d
 from tqdm import tqdm
-
-# read saved background noise
 import pandas as pd
+from constants import c, h, alpha, omega, distance
 
 
 def radiometric_error_vims(df_bns, df_raw, cube_name_all, output_name_sigma):
@@ -107,12 +105,6 @@ def radiometric_error_vims(df_bns, df_raw, cube_name_all, output_name_sigma):
 
     # calculate standard deviation for I/F for each pixel and band
     df_sigma = df_raw.copy()[['cube', 'pixel_index']]
-
-    c = 2.998*10**8  # speed of light in m/s
-    h = 6.626*10**(-34)  # Planck's constant in Js
-    alpha = 0.035  # IR telescope aperture in m^2 !!! different from report
-    omega = 2.5*10**(-7)  # FOV solid angle subtended in srad
-    distance = 9.5475  # mean Sun - Saturn distance in au
 
     for band_id in tqdm(range(97, 353), desc="bands"):
 
